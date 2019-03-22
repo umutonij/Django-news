@@ -1,7 +1,9 @@
 from django.db import models
 import datetime as dt
+from django.contrib.auth.models import User
+from tinymce.models import HTMLField
 # Create your models here.
-class Editor(models.Model):
+class User(models.Model):
     first_name = models.CharField(max_length =30)
     last_name = models.CharField(max_length =30)
     email = models.EmailField()
@@ -10,7 +12,7 @@ class Editor(models.Model):
     def __str__(self):
         return self.first_name
 
-    def save_editor(self):
+    def save_user(self):
         self.save()
 
 class tags(models.Model):
@@ -19,12 +21,12 @@ class tags(models.Model):
     def __str__(self):
         return self.name
 class Article(models.Model):
-    title = models.CharField(max_length =60)
-    post = models.TextField()
-    editor = models.ForeignKey(Editor)
+    title = models.CharField(max_length=60)
+    post = HTMLField()
+    user = models.ForeignKey(User,on_delete=models.CASCADE) 
     tags = models.ManyToManyField(tags)
     pub_date = models.DateTimeField(auto_now_add=True)
-    article_image = models.ImageField(upload_to = 'articles/', blank=True)
+    article_image = models.ImageField(upload_to='articles/', blank=True)
 
     @classmethod
     def todays_news(cls):
